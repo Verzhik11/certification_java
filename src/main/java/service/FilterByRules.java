@@ -33,15 +33,8 @@ public class FilterByRules {
      */
     public List<Flight> longTransferPast() {
         List<Flight> flights = filterFlights.pastFlights();
-        if (flights.isEmpty()) {
-            throw new FlightException("Перелеты за прошлый период отсутствуют");
-        }
         FilterFlights filterFlights1 = new FilterFlights(flights);
-        List<Flight> flights1 = filterFlights1.longTransfer();
-        if (flights1.isEmpty()) {
-            throw new FlightException("Перелеты с длительной пересадкой отсутсвуют");
-        }
-        return flights1;
+        return filterFlights1.longTransfer();
     }
 
 }
