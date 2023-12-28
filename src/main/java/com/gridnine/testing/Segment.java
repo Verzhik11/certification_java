@@ -33,10 +33,18 @@ public class Segment {
                 + ']';
     }
 
+/*    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Segment)) return false;
+        Segment segment = (Segment) o;
+        return departureDate.equals(segment.departureDate) && arrivalDate.equals(segment.arrivalDate);
+    }*/
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Segment)) return false;
         Segment segment = (Segment) o;
         return Objects.equals(departureDate, segment.departureDate) && Objects.equals(arrivalDate, segment.arrivalDate);
     }

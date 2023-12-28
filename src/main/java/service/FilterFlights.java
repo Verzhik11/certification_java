@@ -20,21 +20,42 @@ public class FilterFlights {
         this.flights = flights;
     }
 
+    /**
+     * метод получает список уже совершенных рейсов
+     * @return список перелетов
+     */
     public List<Flight> pastFlights() {
-        LocalDateTime now = LocalDateTime.now();
-        return flights.stream()
+        LocalDate now = LocalDateTime.now().toLocalDate();
+        List<Flight> result = flights.stream()
                 .filter(flight -> flight.getSegments().stream()
-                        .anyMatch(segment -> segment.getDepartureDate().isBefore(now)))
+                        .anyMatch(segment -> segment.getDepartureDate().toLocalDate().isBefore(now)))
                 .collect(Collectors.toList());
+        if (result.isEmpty()) {
+            throw new FlightException("Список перелетов за прошлый период отсутствует");
+        }
+        return result;
 
     }
 
+    /**
+     * метод получает список рейсов, у которых время прилеты раньше времени вылета (разницы в часовых поясах)
+     * @return списко перелетов
+     */
     public List<Flight> timeZone() {
-        return flights.stream()
+        List<Flight> result = flights.stream()
                 .filter(flight -> flight.getSegments().stream()
                         .anyMatch(segment -> segment.getArrivalDate().isBefore(segment.getDepartureDate())))
                 .collect(Collectors.toList());
+        if (result.isEmpty()) {
+            throw new FlightException("Список перелетов за прошлый период отсутствует");
+        }
+        return result;
     }
+
+    /**
+     * метод получает список перелетов с длительной пересадокой (более 2-х часов)
+     * @return списко перелетов
+     */
 
     public List<Flight> longTransfer() {
         List<Flight> newList = new ArrayList<>();
@@ -51,15 +72,27 @@ public class FilterFlights {
                 }
             }
         }
+        if (newList.isEmpty()) {
+            throw new FlightException("Перелеты с длительной пересадкой отсутствуют");
+        }
         return newList;
     }
 
+    /**
+     * метод получает список перелетов на определенный день
+     * @param date календарный день
+     * @return список перелетов
+     */
     public List<Flight> thisDay(LocalDate date) {
-        return flights.stream().filter(flight -> flight.getSegments().stream()
+        List<Flight> result = flights.stream().filter(flight -> flight.getSegments().stream()
                         .findFirst()
                         .map(segment -> segment.getDepartureDate().toLocalDate().isEqual(date))
                         .orElse(false))
                 .collect(Collectors.toList());
+        if (result.isEmpty()) {
+            throw new FlightException("Список рейсов на этот день отсутствует");
+        }
+        return result;
     }
 
     /**
@@ -86,7 +119,7 @@ public class FilterFlights {
                 break;
             default:
                 result = flights.stream()
-                        .filter(flight -> flight.getSegments().size() > 3)
+                        .filter(flight -> flight.getSegments().size() > 4)
                         .collect(Collectors.toList());
         }
 

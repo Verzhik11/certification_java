@@ -12,7 +12,7 @@ import java.util.List;
 public class FlightBuilder {
     public static List<Flight> createFlights() {
         LocalDateTime threeDaysFromNow = LocalDateTime.now().plusDays(3);
-        return Arrays.asList(
+        return List.of(
                 //A normal flight with two hour duration
                 createFlight(threeDaysFromNow, threeDaysFromNow.plusHours(2)),
                 //A normal multi segment flight
@@ -48,7 +48,7 @@ public class FlightBuilder {
     public static List<Flight> createPastAndTodayFlight() {
         LocalDateTime fiveDaysUntilNow = LocalDateTime.now().minusDays(5);
         LocalDateTime now = LocalDateTime.now();
-        return Arrays.asList(
+        return List.of(
                 //A normal flight with two hour duration
                 createFlight(fiveDaysUntilNow, fiveDaysUntilNow.plusHours(3)),
                 //A normal multi segment flight
